@@ -34,8 +34,8 @@
             <i  title="Move to the right" id="arrow-right" class="fas fa-3x fa-arrow-right"></i>
           </div>
         </div>
-        <div style="text-align: center; max-width: 10rem;">
-          <p id="arrow-indicator" ></p>
+        <div >
+          <p id="arrow-indicator" >press on the key to move the block</p>
         </div>
       </div>
     </div>
@@ -46,23 +46,39 @@
      const arrowDown = document.getElementById("arrow-down");
      const arrowRight = document.getElementById("arrow-right");
      const arrowLeft = document.getElementById("arrow-left");
+     const arrows = document.querySelector(".arrows");
 
      
-      //adding event listeners 
-      
+     
+     //adding event listeners 
+     
+     const returnText = (text, e)=>{
+      if (e.target !== e.currentTarget) {
+        arrowText.innerHTML =  text;
+       }
+      e.stopPropagation();
+     }
+     const changeText = (text) =>{
+      arrowText.innerHTML =  text;
+     }
+
+     arrows.addEventListener("mouseout", (e)=>{
+       returnText("press on the key to move the block", e);
+     });
+
       arrowDown.addEventListener("mouseover", ()=>{
-        arrowText.innerHTML =  "lowers the block faster";
+         changeText("lowers the block faster");
       });
       arrowLeft.addEventListener("mouseover", ()=>{
-        arrowText.innerHTML =  "moves the block to the left";
+         changeText("moves the block to the left");
       });
       arrowRight.addEventListener("mouseover", ()=>{
-        arrowText.innerHTML =  "moves the block to the right";
+        changeText("moves the block to the right");
       });
       arrowUp.addEventListener("mouseover", ()=>{
-        arrowText.innerHTML =  "rotates the block";
+        changeText("rotates the block");
       }) ;
-
+      
     </script>
     <script src="js/Game.js"></script>
   </body>
