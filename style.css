@@ -13,7 +13,7 @@ body {
 
 #score {
   text-align: center;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   width: 10rem;
   padding: 0.5rem 0;
   background-color: var(--main-color);
@@ -21,7 +21,7 @@ body {
 
 #enter {
   text-align: center;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   width: 10rem;
   padding-bottom: 1rem;
   color: var(--text-color);
@@ -33,7 +33,7 @@ body {
   width: 10rem;
   height: 10rem;
   margin-bottom: 1rem;
-  border-radius: 4px;
+  /* border-radius: 4px; */
 }
 
 #gameCanvas {
@@ -42,6 +42,8 @@ body {
 }
 #arrow-indicator {
   font-weight: 400;
+  text-align: center;
+  min-width: 10rem;
 }
 
 .ui {
@@ -78,7 +80,7 @@ body {
   color: var(--text-color);
   background-color: var(--main-color);
   padding: 0.2rem;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   cursor: pointer;
 }
 .arrows {
