@@ -1,15 +1,85 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>Katayatris</title>
+    <script
+      src="https://kit.fontawesome.com/3dc1ef13e3.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <style type="text/css">
-      canvas { border: 1px solid black; }
+      canvas {
+        border: 1px solid black;
+      }
     </style>
   </head>
   <body>
-    <H1 id = "score">Score: 0</H1>
-    <canvas id="gameCanvas" width="250" height="500"></canvas>
-    <script src='js/Game.js'></script>
+    <div class="ui">
+      <div class="game">
+        <h1 style="margin-bottom: 0;">KATAYATRIS</h1>
+        <canvas id="gameCanvas" width="250px" height="500px"></canvas>
+      </div>
+      <div class="properties">
+        <h2 id="enter" >Press Enter to start the game</h1>
+          <canvas id="upcoming-block"></canvas>
+        <h2 id="score">Score: 0</h2>
+        <div class="arrows">
+          <div class="upper-arrow">
+            <i title="Change direction" id="arrow-up" class="fas fa-3x fa-arrow-up"></i>
+          </div>
+          <div class="lower-arrows">
+            <i title="Move to the left" id="arrow-left" class="fas fa-3x fa-arrow-left"></i>
+            <i title="Move downwards faster" id="arrow-down" class="fas fa-3x fa-arrow-down"></i>
+            <i  title="Move to the right" id="arrow-right" class="fas fa-3x fa-arrow-right"></i>
+          </div>
+        </div>
+        <div >
+          <p id="arrow-indicator" >press on the key to move the block</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      //assigning elements from the Dom
+      const arrowText = document.getElementById("arrow-indicator");
+     const arrowUp = document.getElementById("arrow-up");
+     const arrowDown = document.getElementById("arrow-down");
+     const arrowRight = document.getElementById("arrow-right");
+     const arrowLeft = document.getElementById("arrow-left");
+     const arrows = document.querySelector(".arrows");
+
+     
+     
+     //adding event listeners 
+     
+     const returnText = (text, e)=>{
+      if (e.target !== e.currentTarget) {
+        arrowText.innerHTML =  text;
+       }
+      e.stopPropagation();
+     }
+     const changeText = (text) =>{
+      arrowText.innerHTML =  text;
+     }
+
+     arrows.addEventListener("mouseout", (e)=>{
+       returnText("press on the key to move the block", e);
+     });
+
+      arrowDown.addEventListener("mouseover", ()=>{
+         changeText("lowers the block faster");
+      });
+      arrowLeft.addEventListener("mouseover", ()=>{
+         changeText("moves the block to the left");
+      });
+      arrowRight.addEventListener("mouseover", ()=>{
+        changeText("moves the block to the right");
+      });
+      arrowUp.addEventListener("mouseover", ()=>{
+        changeText("rotates the block");
+      }) ;
+      
+    </script>
+    <script src="js/Game.js"></script>
   </body>
 </html>
