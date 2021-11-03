@@ -65,7 +65,6 @@ window.addEventListener('load', function() {
 
 function LoadDependencies(){
     document.writeln("<script type='text/javascript' src='js/Renderer.js'></script>");
-    document.writeln("<script type='text/javascript' src='js/Classes.js'></script>");
     document.writeln("<script type='text/javascript' src='js/InputManager.js'></script>");
 }
 
@@ -90,11 +89,14 @@ function StartGameLoop() {
         for (j = 0;j < gridCols;j++)
             grid[i][j] = 0;
     }
-
-    console.log(grid);
     
     //Start Render Cycle
     Render();
+
+    //Start the speed increase loop
+    setTimeout(IncreaseSpeed,10000);
+
+    swipeThreshold = canvas.width / 10;
 }
 
 function Update(){
@@ -109,9 +111,14 @@ function Update(){
         return;
     }
 
+    //Clear finished lines and calculate score
+    scoreMultiplier = 0;
     for (i = 0;i < grid.length;i++)
-        if (grid[i].every((val, i, arr) => val === -1))
+        if (grid[i].every((val, i, arr) => val === -1)){
+            scoreMultiplier ++;
             ClearLine(i);
+        }
+    AddScrore(10*scoreMultiplier*scoreMultiplier + 10*scoreMultiplier);
     
     //Spawn a new block if the previous one cannot fall anymore
     if (!dropped)
@@ -136,7 +143,7 @@ function DropBlock() {
             return (a[0] > b[0]) ? -1 : 1;
         }
     });
-    console.log(blocksToDrop);
+    
     for (a = 0;a < blocksToDrop.length;a++){
         i = blocksToDrop[a][0];
         j = blocksToDrop[a][1];
@@ -148,7 +155,6 @@ function DropBlock() {
             grid[i][j] = -1;
     }
 
-    console.log(canDrop,blocksToDrop.length);
     return canDrop && blocksToDrop.length != 0;
 }
 
@@ -195,8 +201,6 @@ function Move(dir) {
         for (a = 0;a < blocksToMove.length;a++){
             i = blocksToMove[a][0];
             j = blocksToMove[a][1];
-            // grid[i][j+dir]++;
-            // grid[i][j]--;
             grid[i][j+dir] = grid[i][j];
             grid[i][j] = 0;
         }
@@ -208,7 +212,10 @@ function ClearLine(index) {
     for (i = index;i > 0;i--)
         grid[i] = [...grid[i-1]];
     grid[0] = new Array(gridCols).fill(0);
-    playerScore += 10;
+}
+
+function AddScrore(amount){
+    playerScore += amount;
     scoreText.innerText = "Score: " + playerScore;
 }
 
@@ -224,47 +231,54 @@ function Rotate(){
         for (j = 0;j < gridCols;j++)
             if (grid[i][j] > 0)
                 blocksToRotate.push([i,j]);
-    
+
     blockStart = [Math.max(gridRows,gridCols),Math.max(gridRows,gridCols)];
-    blockSize = [0,0];
+    blockEnd = [0,0];
 
     for (i = 0;i < blocksToRotate.length;i++){
         blockStart[0] = Math.min(blockStart[0],blocksToRotate[i][0]);
         blockStart[1] = Math.min(blockStart[1],blocksToRotate[i][1]);
-        blockSize[0] = Math.max(blockStart[0],blocksToRotate[i][0]);
-        blockSize[1] = Math.max(blockStart[1],blocksToRotate[i][1]);
+        blockEnd[0] = Math.max(blockEnd[0],blocksToRotate[i][0]);
+        blockEnd[1] = Math.max(blockEnd[1],blocksToRotate[i][1]);
     }
 
-    blockSize = Math.max(blockSize[0]-blockStart[0],blockSize[1]-blockStart[1]);
+    blockSize = Math.max(blockEnd[0]-blockStart[0],blockEnd[1]-blockStart[1])+1;
 
     newBlock = [];
 
-    for (i = 0;i < 4;i++){
-        newBlock[i] = []
-        for (j = 0;j < 4;j++)
+    for (i = 0;i < blockSize;i++){
+        newBlock[i] = [];
+        for (j = 0;j < blockSize;j++)
             newBlock[i][j] = grid[blockStart[0]+j][blockStart[1]+i];
     }
 
-    for (i = 0;i < 4;i++){
-        for (j = 0;j < 4/2;j++){
+    for (i = 0;i < blockSize;i++){
+        for (j = 0;j < Math.floor(blockSize/2);j++){
             t = newBlock[i][j];
-            newBlock[i][j] = newBlock[i][3-j];
-            newBlock[i][3-j] = t;
+            newBlock[i][j] = newBlock[i][blockSize-1-j];
+            newBlock[i][blockSize-1-j] = t;
         }
     }
 
     canRotate = true;
-    for (i = 0;i < 4;i++)
-        for (j = 0;j < 4;j++)
+    for (i = 0;i < blockSize;i++)
+        for (j = 0;j < blockSize;j++)
             if (blockStart[0]+i < 0 || blockStart[0]+i >= gridRows || blockStart[1]+j < 0 || blockStart[1]+j >= gridCols)
                 return;
             else if (grid[blockStart[0]+i][blockStart[1]+j] == -1)
                 return;
 
     
-    for (i = 0;i < 4;i++)
-        for (j = 0;j < 4;j++)
+    for (i = 0;i < blockSize;i++)
+        for (j = 0;j < blockSize;j++)
             grid[blockStart[0]+i][blockStart[1]+j] = newBlock[i][j];
 
     DrawToScreen();
+}
+
+function IncreaseSpeed(){
+    if (gameSpeed > 100){
+        gameSpeed = Math.max(100,gameSpeed-100);
+        setTimeout(IncreaseSpeed,10000);
+    }
 }
