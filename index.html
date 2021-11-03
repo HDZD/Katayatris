@@ -26,16 +26,16 @@
         <h2 id="score">Score: 0</h2>
         <div class="arrows">
           <div class="upper-arrow">
-            <i title="Change direction" id="arrow-up" class="fas fa-3x fa-arrow-up"></i>
+            <i  id="arrow-up" class="fas fa-3x fa-arrow-up"></i>
           </div>
           <div class="lower-arrows">
-            <i title="Move to the left" id="arrow-left" class="fas fa-3x fa-arrow-left"></i>
-            <i title="Move downwards faster" id="arrow-down" class="fas fa-3x fa-arrow-down"></i>
-            <i  title="Move to the right" id="arrow-right" class="fas fa-3x fa-arrow-right"></i>
+            <i  id="arrow-left" class="fas fa-3x fa-arrow-left"></i>
+            <i  id="arrow-down" class="fas fa-3x fa-arrow-down"></i>
+            <i   id="arrow-right" class="fas fa-3x fa-arrow-right"></i>
           </div>
         </div>
         <div >
-          <p id="arrow-indicator" >press on the key to move the block</p>
+          <p id="arrow-indicator" >press on the keys to move the block</p>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
      }
 
      arrows.addEventListener("mouseout", (e)=>{
-       returnText("press on the key to move the block", e);
+       returnText("press on the keys to move the block", e);
      });
 
       arrowDown.addEventListener("mouseover", ()=>{
@@ -78,7 +78,7 @@
       arrowUp.addEventListener("mouseover", ()=>{
         changeText("rotates the block");
       }) ;
-      
+
     </script>
     <script src="js/Game.js"></script>
   </body>
