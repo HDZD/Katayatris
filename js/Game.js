@@ -61,22 +61,30 @@ LoadDependencies();
 
 window.addEventListener('load', function() {
     Initialize();
+    loaded = true;
 });
 
 function LoadDependencies(){
     document.writeln("<script type='text/javascript' src='js/Renderer.js'></script>");
     document.writeln("<script type='text/javascript' src='js/InputManager.js'></script>");
+    document.writeln("<script type='text/javascript' src='js/LocaleHandler.js'></script>");
 }
 
 function Initialize(){
     canvas = document.getElementById('gameCanvas');
     screenWidth = canvas.width;
     screenHeight = canvas.height;
+    
+    canvas.addEventListener("touchstart", MouseDown, false);
+    canvas.addEventListener("touchmove", MouseMove, false);
+    canvas.addEventListener("touchend", MouseUp, false);
+    canvas.addEventListener("touchcancel", MouseUp, false);
+
     if (canvas.getContext){
         ctx = canvas.getContext('2d');
         ctx.globalCompositeOperation = 'destination-over';
         scoreText = document.getElementById('score');
-        StartGameLoop();
+        swipeThreshold = canvas.width / 10;
     }
     else
         alert("Unsupported Platform");
@@ -92,11 +100,6 @@ function StartGameLoop() {
     
     //Start Render Cycle
     Render();
-
-    //Start the speed increase loop
-    setTimeout(IncreaseSpeed,10000);
-
-    swipeThreshold = canvas.width / 10;
 }
 
 function Update(){
@@ -118,7 +121,9 @@ function Update(){
             scoreMultiplier ++;
             ClearLine(i);
         }
-    AddScrore(10*scoreMultiplier*scoreMultiplier + 10*scoreMultiplier);
+    AddScore(10*scoreMultiplier*scoreMultiplier + 10*scoreMultiplier);
+    if (scoreMultiplier)
+        IncreaseSpeed(50);
     
     //Spawn a new block if the previous one cannot fall anymore
     if (!dropped)
@@ -214,13 +219,13 @@ function ClearLine(index) {
     grid[0] = new Array(gridCols).fill(0);
 }
 
-function AddScrore(amount){
+function AddScore(amount){
     playerScore += amount;
     scoreText.innerText = "Score: " + playerScore;
 }
 
 function LoseGame() {
-    alert("Game Lost!");
+    alert("Score: " + playerScore);
     location.reload();
 }
 
@@ -276,9 +281,7 @@ function Rotate(){
     DrawToScreen();
 }
 
-function IncreaseSpeed(){
-    if (gameSpeed > 100){
-        gameSpeed = Math.max(100,gameSpeed-100);
-        setTimeout(IncreaseSpeed,10000);
-    }
+function IncreaseSpeed(amount){
+    if (gameSpeed > 100)
+        gameSpeed = Math.max(100,gameSpeed-amount);
 }
