@@ -11,6 +11,7 @@ var gridCols = 10;
 var gameSpeed = 1000;
 var spawnPoint = [0,3];
 var scoreText;
+var startText;
 var playerScore = 0;
 
 var straightBlock = 
@@ -67,7 +68,6 @@ window.addEventListener('load', function() {
 function LoadDependencies(){
     document.writeln("<script type='text/javascript' src='js/Renderer.js'></script>");
     document.writeln("<script type='text/javascript' src='js/InputManager.js'></script>");
-    document.writeln("<script type='text/javascript' src='js/LocaleHandler.js'></script>");
 }
 
 function Initialize(){
@@ -84,6 +84,7 @@ function Initialize(){
         ctx = canvas.getContext('2d');
         ctx.globalCompositeOperation = 'destination-over';
         scoreText = document.getElementById('score');
+        startText = document.getElementById('enter');
         swipeThreshold = canvas.width / 10;
     }
     else
@@ -91,6 +92,8 @@ function Initialize(){
 }
 
 function StartGameLoop() {
+    startText.innerText = "";
+
     //Initialize Empty Grid
     for (i = 0;i < gridRows;i++){
         grid[i] = [];
